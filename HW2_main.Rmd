@@ -1,0 +1,158 @@
+---
+title: "HW2_Gupta362"
+author: "Abhisek"
+date: "September 10, 2016"
+output: html_document
+---
+library(kable)
+getwd()
+setwd("C:/Users/abhis/Desktop/Coursework/Fall/R for Analytics/Assignments/HW2_gupta362")
+getwd()
+##Question1
+Read the short paper "The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients" by Lei and Chen and identify the business problem they are trying to support with predictive analytics. You can find more information about the data here: https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients  
+
+##Answer 1
+
+The business problem in question is:
+Credit card companies are dealing with a lot of customers who are defaulting on their payments. This is happening because the initial customer targeting didnt include reigorous canvassing of a customer's ability to repay in time. The final statement in this case would be "Assesing the credit risk(Probability of delay in credit card payment) of the prospective credit cardholder."
+
+##Question 2
+Read the short paper "The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients" by Lei and Chen and identify how they formulated the business problem into an analytics problem (or at least attempted to). This means, how they are using quantitative methods to help provide support for the business problem. 
+
+##Answer 2
+
+Credit card companies will hugely benefit if they are able to identify which customer is more likely to pay on time and which is not. If transaction data, financial stement and payments records are available to the company, they can use this data to build a model which will predict future customer behavior. Predictive analytics in this case can be used to either give individual probabilities or the binary response(At risk/Not at risk) for each customer. This will help the credit card companies to give cards only to less risky customers who are less likely to default on their payments.
+
+##Question 3
+Create a data dictionary table of the variables in the data set. The dictionary names should match exactly the names you loaded into R.
+```{r kable}
+library(knitr)
+ID = "ID: observation ID"
+Y = "Y: default payment (Yes = 1, No = 0), as the response variable"
+X1_LIMIT_BAL = "X1_LIMIT_BAL: Amount of the given credit (NT dollar): it includes both the individual consumer credit and his/her family (supplementary) credit."
+X2_SEX = "X2_SEX: (1 = Male, 2 = Female)"
+X3_EDUCATION = "X3_EDUCATION: (1 = graduate school; 2 = university; 3 = high school; 4 = others)"
+X4_MARRIAGE = "X4_MARRIAGE: (1 = married; 2 = single; 3 = others)"
+X5_AGE = "X5_AGE: Age (Years)"
+X6_PAY_0 ="X6_PAY_0: the repayment status in September, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X7_PAY_2 ="X6_PAY_2: the repayment status in August, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X8_PAY_3 ="X6_PAY_3: the repayment status in July, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X9_PAY_4 ="X6_PAY_4: the repayment status in June, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X10_PAY_5 ="X6_PAY_5: the repayment status in May, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X11_PAY_6 ="X6_PAY_6: the repayment status in April, 2005 where 0 = No Delay, -1 = pay duly, 1 = payment delay for one month"
+X12_BILL_AMT1 = "X12_BILL_AMT1: amount of bill statement (NT Dollar) in September, 2005"
+X13_BILL_AMT2 = "X12_BILL_AMT2: amount of bill statement (NT Dollar) in August, 2005"
+X14_BILL_AMT3 = "X12_BILL_AMT3: amount of bill statement (NT Dollar) in July, 2005"
+X15_BILL_AMT4 = "X12_BILL_AMT4: amount of bill statement (NT Dollar) in June, 2005"
+X16_BILL_AMT5 = "X12_BILL_AMT5: amount of bill statement (NT Dollar) in May, 2005"
+X17_BILL_AMT6 = "X12_BILL_AMT6: amount of bill statement (NT Dollar) in April, 2005"
+X18_PAY_AMT1 = "X12_BILL_AMT1: amount of bill previous bill paid (NT Dollar) in September, 2005"
+X19_PAY_AMT2 = "X12_BILL_AMT2: amount of bill previous bill paid (NT Dollar) in August, 2005"
+X20_PAY_AMT3 = "X12_BILL_AMT3: amount of bill previous bill paid (NT Dollar) in July, 2005"
+X21_PAY_AMT4 = "X12_BILL_AMT4: amount of bill previous bill paid (NT Dollar) in June, 2005"
+X22_PAY_AMT5 = "X12_BILL_AMT5: amount of bill previous bill paid (NT Dollar) in May, 2005"
+X23_PAY_AMT6 = "X12_BILL_AMT6: amount of bill previous bill paid (NT Dollar) in April, 2005"
+
+variables <- c(ID,Y,X1_LIMIT_BAL,X2_SEX,X3_EDUCATION, X4_MARRIAGE, X5_AGE, X6_PAY_0, X7_PAY_2, X8_PAY_3,X9_PAY_4,X10_PAY_5, X11_PAY_6, X12_BILL_AMT1, X13_BILL_AMT2, X14_BILL_AMT3, X15_BILL_AMT4, X16_BILL_AMT5, X17_BILL_AMT6, X18_PAY_AMT1, X19_PAY_AMT2, X20_PAY_AMT3,X21_PAY_AMT4,X22_PAY_AMT5, X23_PAY_AMT6)
+kable(variables, caption = "Dataset description", col.names = "Column Name", padding = 5)
+
+```
+
+## Importing the CSV in R
+## Question 4: 
+Set Y, X2_SEX, and X4_MARRIAGE as unordered factors. After you do this, prove with an R function that they are indeed factors.
+```{r}
+credit_data <- read.csv(file="creditCardDefaultData.csv", head = TRUE, sep=",")
+head(credit_data)
+```
+
+```{r}
+credit_data$Y <- factor(credit_data$Y, labels = c("Not_default","Default"), ordered = FALSE)
+class(credit_data$Y)
+
+credit_data$X2_SEX <- factor(credit_data$X2_SEX, labels = c("Male","Female"), ordered = FALSE)
+class(credit_data$X2_SEX)
+
+credit_data$X4_MARRIAGE <- factor(credit_data$X4_MARRIAGE, ordered = FALSE)
+class(credit_data$X4_MARRIAGE)
+
+str(credit_data)
+
+```
+
+##Problem 5
+Set any numbers for X3_EDUCATION that are not 1,2,3, or 4 to 4. Then, change X3_EDUCATION to an ordered factor where 4 < 3 < 2 < 1. -->
+```{r}
+credit_data$X3_EDUCATION[credit_data$X3_EDUCATION != c(1,2,3,4)] <- 4
+
+credit_data$X3_EDUCATION <- factor(credit_data$X3_EDUCATION, ordered = TRUE)
+
+credit_data$X3_EDUCATION <- factor(credit_data$X3_EDUCATION, levels=rev(levels(credit_data$X3_EDUCATION)))
+
+str(credit_data)
+
+```
+
+##Problem 6 
+Source the two data quality functions (i.e. DataQualityReport.R and DataQualityReportOverall.R) and report the results. If there are any incomplete records you have done something incorrectly in problems 4 or 5. Y, X2_SEX, X4_MARRIAGE, and X3_EDUCATION should show up as factors while the other variables as numeric 
+```{r}
+source("DataQualityReport.R")
+source("DataQualityReportOverall.R")
+
+DataQualityReport(credit_data)
+
+DataQualityReportOverall(credit_data)
+```
+
+##Problem 7
+Using R code, find the age of the person who's X12_BILL_AMT1 is equal to 964511. What is their age? 
+```{r}
+age <- credit_data$X5_AGE[credit_data$X12_BILL_AMT1 == 964511]
+age
+```
+
+##Problem 8
+Using R code, find the number of males that have graduate education. -->
+```{r}
+count <- nrow(subset(credit_data, credit_data$X3_EDUCATION == '1'))
+count
+```
+
+##Problem 9 
+Using R code, find the proportion of people that are below average in age among those that have defaulted (i.e. Y==1).
+```{r}
+mean_age <- mean(credit_data$X5_AGE) 
+count_ma_def <- nrow(subset(credit_data , credit_data$X5_AGE < mean_age & credit_data$Y == "Default"))
+count_tot <- nrow(subset(credit_data , credit_data$Y == "Default"))
+
+Perc <- (count_ma_def/count_tot)*100
+Perc
+```
+
+##Problem 10
+Use the ggplot2 package to plot a boxplot of X1_LIMIT_BAL by Y. Should look similar to below. Does the plot suggest there is a statistically significant difference among the two groups?
+```{r}
+library(ggplot2)
+qplot(credit_data$Y, credit_data$X1_LIMIT_BAL, data=credit_data, geom=c("boxplot"), fill=Y, main="Default Status by Credit Limit", ylab="Amount of credit given", xlab="Default Status")
+```
+The median amount of credit given to cardholders defaulting is less than the median amount of credit of cardholders not defaulting on the payment.
+
+
+##Problem 11 
+Source the multiplot.R function so you can create multiple qplots in the same window. You can see examples of how to use this function in the following link. Have the first figure show the distribution of credit card balance by default group in NT (New Taiwan) dollars, and another distribution plot of the credit balance by default group in US dollars. Note: To answer this question, you'll need to figure out what the currency adjustment is. -->
+```{r}
+#Adding a column in USD
+source("multiplot.R")
+
+credit_data[["X1_LIMIT_BAL_USD"]] <- (credit_data$X1_LIMIT_BAL)*0.032
+head(credit_data$X1_LIMIT_BAL_USD)
+
+nt_plot <- qplot(x=X1_LIMIT_BAL,data = credit_data, main = "Distribution of Credit Balance(NT)",geom = "density", xlab = "Amount in NT", ylab = "Density", fill = Y) 
+
+usd_plot <- qplot(x=X1_LIMIT_BAL_USD, data = credit_data, main = "Distribution of Credit Balance(USD)",geom = "density", xlab = "Amount in USD", ylab = "Density", fill = Y) 
+
+multiplot(nt_plot, usd_plot, cols = 2)
+```
+
+
+
